@@ -7,17 +7,18 @@ from .stable_diffusion_walk import SCHEDULERS, pipeline, walk
 
 
 def fn_images(
-    prompt,
-    seed,
-    scheduler,
-    guidance_scale,
-    num_inference_steps,
-    disable_tqdm,
-    upsample,
+        prompt,
+        seed,
+        scheduler,
+        guidance_scale,
+        num_inference_steps,
+        disable_tqdm,
+        upsample,
+        height,
+        width,
 ):
     if upsample:
         from .upsampling import PipelineRealESRGAN
-
         upsampling_pipeline = PipelineRealESRGAN.from_pretrained('nateraw/real-esrgan')
 
     pipeline.set_progress_bar_config(disable=disable_tqdm)
@@ -25,6 +26,8 @@ def fn_images(
     with torch.autocast("cuda"):
         img = pipeline(
             prompt,
+            height=height,
+            width=width,
             guidance_scale=guidance_scale,
             num_inference_steps=num_inference_steps,
             generator=torch.Generator(device=pipeline.device).manual_seed(seed),
@@ -103,10 +106,12 @@ interface_images = gr.Interface(
         gr.Textbox("blueberry spaghetti"),
         gr.Number(42, label='Seed', precision=0),
         gr.Dropdown(["klms", "ddim", "default"], value="klms"),
-        gr.Slider(0.0, 20.0, 8.5),
+        gr.Slider(0.0, 20.0, 7.5),
         gr.Slider(1, 200, 50),
         gr.Checkbox(False),
         gr.Checkbox(False),
+        gr.Number(512, label='height', precision=0),
+        gr.Number(512, label='width', precision=0),
     ],
     outputs=gr.Image(type="pil"),
 )
