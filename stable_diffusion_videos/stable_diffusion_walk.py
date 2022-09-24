@@ -196,7 +196,7 @@ def walk(
 
     pipeline.set_progress_bar_config(disable=disable_tqdm)
     pipeline.scheduler = SCHEDULERS[scheduler]
-    pipeline.safety_checker = NoCheck()
+    # pipeline.safety_checker = NoCheck()
 
     assert len(prompts) == len(seeds)
 
