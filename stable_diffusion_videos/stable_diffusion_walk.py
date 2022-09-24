@@ -9,6 +9,7 @@ from diffusers.schedulers import (DDIMScheduler, LMSDiscreteScheduler,
 from diffusers import ModelMixin
 
 from .stable_diffusion_pipeline import StableDiffusionPipeline
+from .stable_diffusion_pipeline import NoCheck
 
 pipeline = StableDiffusionPipeline.from_pretrained(
     "CompVis/stable-diffusion-v1-4",
@@ -195,6 +196,7 @@ def walk(
 
     pipeline.set_progress_bar_config(disable=disable_tqdm)
     pipeline.scheduler = SCHEDULERS[scheduler]
+    pipeline.safety_checker = NoCheck()
 
     assert len(prompts) == len(seeds)
 
